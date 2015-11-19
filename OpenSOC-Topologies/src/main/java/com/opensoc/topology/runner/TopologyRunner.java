@@ -17,19 +17,35 @@
  */
 package com.opensoc.topology.runner;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-
-import oi.thekraken.grok.api.Grok;
-
+import backtype.storm.Config;
+import backtype.storm.generated.Grouping;
+import backtype.storm.spout.RawScheme;
+import backtype.storm.spout.SchemeAsMultiScheme;
+import backtype.storm.topology.BoltDeclarer;
+import backtype.storm.tuple.Fields;
+import com.esotericsoftware.kryo.serializers.MapSerializer;
+import com.opensoc.alerts.TelemetryAlertsBolt;
+import com.opensoc.alerts.interfaces.AlertsAdapter;
+import com.opensoc.enrichment.adapters.cif.CIFHbaseAdapter;
+import com.opensoc.enrichment.adapters.geo.GeoMysqlAdapter;
+import com.opensoc.enrichment.adapters.host.HostFromPropertiesFileAdapter;
+import com.opensoc.enrichment.adapters.threat.ThreatHbaseAdapter;
+import com.opensoc.enrichment.adapters.whois.WhoisHBaseAdapter;
+import com.opensoc.enrichment.common.GenericEnrichmentBolt;
+import com.opensoc.enrichment.interfaces.EnrichmentAdapter;
+import com.opensoc.hbase.HBaseBolt;
+import com.opensoc.hbase.HBaseStreamPartitioner;
+import com.opensoc.hbase.TupleTableConfig;
+import com.opensoc.helpers.topology.Cli;
+import com.opensoc.helpers.topology.SettingsLoader;
+import com.opensoc.index.interfaces.IndexAdapter;
+import com.opensoc.indexing.TelemetryIndexingBolt;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.StringUtils;
+import org.apache.flink.storm.api.FlinkLocalCluster;
+import org.apache.flink.storm.api.FlinkSubmitter;
+import org.apache.flink.storm.api.FlinkTopologyBuilder;
 import org.apache.storm.hdfs.bolt.HdfsBolt;
 import org.apache.storm.hdfs.bolt.format.DefaultFileNameFormat;
 import org.apache.storm.hdfs.bolt.format.DelimitedRecordFormat;
@@ -42,50 +58,19 @@ import org.apache.storm.hdfs.bolt.sync.CountSyncPolicy;
 import org.apache.storm.hdfs.bolt.sync.SyncPolicy;
 import org.apache.storm.hdfs.common.rotation.MoveFileAction;
 import org.json.simple.JSONObject;
-
 import storm.kafka.BrokerHosts;
 import storm.kafka.KafkaSpout;
 import storm.kafka.SpoutConfig;
 import storm.kafka.ZkHosts;
 import storm.kafka.bolt.KafkaBolt;
-import backtype.storm.Config;
-import backtype.storm.LocalCluster;
-import backtype.storm.StormSubmitter;
-import backtype.storm.generated.Grouping;
-import backtype.storm.spout.RawScheme;
-import backtype.storm.spout.SchemeAsMultiScheme;
-import backtype.storm.topology.BoltDeclarer;
-import backtype.storm.topology.TopologyBuilder;
-import backtype.storm.tuple.Fields;
 
-import com.esotericsoftware.kryo.serializers.FieldSerializer;
-import com.esotericsoftware.kryo.serializers.MapSerializer;
-
-
-
-import com.opensoc.alerts.TelemetryAlertsBolt;
-import com.opensoc.alerts.adapters.HbaseWhiteAndBlacklistAdapter;
-import com.opensoc.alerts.interfaces.AlertsAdapter;
-import com.opensoc.enrichment.adapters.cif.CIFHbaseAdapter;
-import com.opensoc.enrichment.adapters.geo.GeoMysqlAdapter;
-import com.opensoc.enrichment.adapters.host.HostFromPropertiesFileAdapter;
-import com.opensoc.enrichment.adapters.whois.WhoisHBaseAdapter;
-import com.opensoc.enrichment.adapters.threat.ThreatHbaseAdapter;
-import com.opensoc.enrichment.common.GenericEnrichmentBolt;
-import com.opensoc.enrichment.interfaces.EnrichmentAdapter;
-import com.opensoc.hbase.HBaseBolt;
-import com.opensoc.hbase.HBaseStreamPartitioner;
-import com.opensoc.hbase.TupleTableConfig;
-import com.opensoc.helpers.topology.Cli;
-import com.opensoc.helpers.topology.SettingsLoader;
-import com.opensoc.index.interfaces.IndexAdapter;
-import com.opensoc.indexing.TelemetryIndexingBolt;
-import com.opensoc.json.serialization.JSONKryoSerializer;
+import java.lang.reflect.Constructor;
+import java.util.*;
 
 public abstract class TopologyRunner {
 
 	protected Configuration config;
-	protected TopologyBuilder builder;
+	protected FlinkTopologyBuilder builder;
 	protected Config conf;
 	protected boolean local_mode = true;
 	protected boolean debug = true;
@@ -150,7 +135,7 @@ public abstract class TopologyRunner {
 
 		System.out.println("[OpenSOC] Initializing Topology: " + topology_name);
 
-		builder = new TopologyBuilder();
+		builder = new FlinkTopologyBuilder();
 
 		conf = new Config();
 		conf.registerSerialization(JSONObject.class, MapSerializer.class);
@@ -406,14 +391,14 @@ public abstract class TopologyRunner {
 		if (local_mode) {
 			conf.setNumWorkers(config.getInt("num.workers"));
 			conf.setMaxTaskParallelism(1);
-			LocalCluster cluster = new LocalCluster();
+			FlinkLocalCluster cluster = new FlinkLocalCluster();
 			cluster.submitTopology(topology_name, conf,
 					builder.createTopology());
 		} else {
 
 			conf.setNumWorkers(config.getInt("num.workers"));
 			conf.setNumAckers(config.getInt("num.ackers"));
-			StormSubmitter.submitTopology(topology_name, conf,
+			FlinkSubmitter.submitTopology(topology_name, conf,
 					builder.createTopology());
 		}
 
