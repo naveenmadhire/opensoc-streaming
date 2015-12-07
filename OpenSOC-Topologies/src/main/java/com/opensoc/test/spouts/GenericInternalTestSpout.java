@@ -17,12 +17,6 @@
 
 package com.opensoc.test.spouts;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import com.opensoc.test.filereaders.FileReader;
-
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;
@@ -30,6 +24,11 @@ import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
+import com.opensoc.test.filereaders.FileReader;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 
 public class GenericInternalTestSpout extends BaseRichSpout {
@@ -91,7 +90,7 @@ public class GenericInternalTestSpout extends BaseRichSpout {
 		
 		if(cnt < jsons.size())
 		{
-			_collector.emit(new Values(jsons.get(cnt).getBytes()));
+			_collector.emit(new Values(jsons.get(cnt)));
 		}
 		cnt ++;
 		

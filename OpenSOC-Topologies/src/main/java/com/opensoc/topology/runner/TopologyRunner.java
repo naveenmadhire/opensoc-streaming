@@ -22,6 +22,7 @@ import backtype.storm.generated.Grouping;
 import backtype.storm.spout.RawScheme;
 import backtype.storm.spout.SchemeAsMultiScheme;
 import backtype.storm.topology.BoltDeclarer;
+import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
 import com.esotericsoftware.kryo.serializers.MapSerializer;
 import com.opensoc.alerts.TelemetryAlertsBolt;
@@ -45,7 +46,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.StringUtils;
 import org.apache.flink.storm.api.FlinkLocalCluster;
 import org.apache.flink.storm.api.FlinkSubmitter;
-import org.apache.flink.storm.api.FlinkTopologyBuilder;
+import org.apache.flink.storm.api.FlinkTopology;
 import org.apache.storm.hdfs.bolt.HdfsBolt;
 import org.apache.storm.hdfs.bolt.format.DefaultFileNameFormat;
 import org.apache.storm.hdfs.bolt.format.DelimitedRecordFormat;
@@ -70,7 +71,7 @@ import java.util.*;
 public abstract class TopologyRunner {
 
 	protected Configuration config;
-	protected FlinkTopologyBuilder builder;
+	protected TopologyBuilder builder;
 	protected Config conf;
 	protected boolean local_mode = true;
 	protected boolean debug = true;
@@ -135,7 +136,7 @@ public abstract class TopologyRunner {
 
 		System.out.println("[OpenSOC] Initializing Topology: " + topology_name);
 
-		builder = new FlinkTopologyBuilder();
+		builder = new TopologyBuilder();
 
 		conf = new Config();
 		conf.registerSerialization(JSONObject.class, MapSerializer.class);
@@ -187,6 +188,7 @@ public abstract class TopologyRunner {
 					"bolt.parser");
 		}
 
+		/*
 		if (config.getBoolean("bolt.enrichment.geo.enabled", false)) {
 			String component_name = config.getString(
 					"bolt.enrichment.geo.name", "DefaultGeoEnrichmentBolt");
@@ -265,6 +267,8 @@ public abstract class TopologyRunner {
 					"bolt.enrichment.threat");
 		}
 
+		*/
+		/*
 		if (config.getBoolean("bolt.alerts.enabled", false)) {
 			String component_name = config.getString("bolt.alerts.name",
 					"DefaultAlertsBolt");
@@ -283,7 +287,8 @@ public abstract class TopologyRunner {
 			SettingsLoader.printConfigOptions((PropertiesConfiguration) config,
 					"bolt.alerts");
 		}
-
+		*/
+		/*
 		if (config.getBoolean("bolt.alerts.indexing.enabled") && config.getBoolean("bolt.alerts.enabled")) {
 
 			String component_name = config.getString(
@@ -375,7 +380,7 @@ public abstract class TopologyRunner {
 			SettingsLoader.printConfigOptions((PropertiesConfiguration) config,
 					"bolt.hbase");
 		}
-
+		*/
 		System.out.println("[OpenSOC] Topology Summary: ");
 		System.out.println("[OpenSOC] Message Stream: "
 				+ printComponentStream(messageComponents));
@@ -393,13 +398,13 @@ public abstract class TopologyRunner {
 			conf.setMaxTaskParallelism(1);
 			FlinkLocalCluster cluster = new FlinkLocalCluster();
 			cluster.submitTopology(topology_name, conf,
-					builder.createTopology());
+					FlinkTopology.createTopology(builder));
 		} else {
 
 			conf.setNumWorkers(config.getInt("num.workers"));
 			conf.setNumAckers(config.getInt("num.ackers"));
 			FlinkSubmitter.submitTopology(topology_name, conf,
-					builder.createTopology());
+					FlinkTopology.createTopology(builder));
 		}
 
 	}

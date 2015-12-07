@@ -17,13 +17,19 @@
  */
 package com.opensoc.topology.runner;
 
+import backtype.storm.tuple.Tuple;
 import com.opensoc.filters.GenericMessageFilter;
 import com.opensoc.parser.interfaces.MessageParser;
 import com.opensoc.parsing.AbstractParserBolt;
 import com.opensoc.parsing.TelemetryParserBolt;
+import com.opensoc.test.bolts.PrintingBolt;
 import com.opensoc.test.spouts.GenericInternalTestSpout;
+import org.apache.flink.storm.util.BoltFileSink;
+import org.apache.flink.storm.util.OutputFormatter;
 
-public class AsaRunner extends TopologyRunner{
+import java.io.Serializable;
+
+public class AsaRunner extends TopologyRunner implements Serializable{
 	
 	 static String test_file_path = "SampleInput/AsaOutput";
 
@@ -54,11 +60,24 @@ public class AsaRunner extends TopologyRunner{
 					.withOutputFieldName(topology_name)
 					.withMessageFilter(new GenericMessageFilter())
 					.withMetricConfig(config);
-
+			/*
 			builder.setBolt(name, parser_bolt,
 					config.getInt("bolt.parser.parallelism.hint"))
 					.shuffleGrouping(messageUpstreamComponent)
 					.setNumTasks(config.getInt("bolt.parser.num.tasks"));
+			*/
+
+			builder.setBolt("Printing Bolt", new PrintingBolt()).shuffleGrouping(messageUpstreamComponent);
+
+			builder.setBolt("WritingFile", new BoltFileSink("/Users/poj871/strout/file.txt", new
+					OutputFormatter() {
+
+						//@Override
+						public String format(Tuple tuple) {
+							return tuple.toString();
+						}
+					}), 1).shuffleGrouping(messageUpstreamComponent);
+
 
 		} catch (Exception e) {
 			e.printStackTrace();

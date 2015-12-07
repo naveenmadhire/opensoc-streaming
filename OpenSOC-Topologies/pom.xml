@@ -97,7 +97,6 @@
 			<groupId>org.apache.storm</groupId>
 			<artifactId>storm-core</artifactId>
 			<version>${global_storm_version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.storm</groupId>
@@ -109,7 +108,6 @@
 			<artifactId>storm</artifactId>
 			<version>${global_storm_version}</version>
 			<type>pom</type>
-			<scope>provided</scope>
 		</dependency>
 		
 
@@ -138,6 +136,11 @@
 		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-storm</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-storm-examples</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
