@@ -1,3 +1,29 @@
+#OpenSoc Streaming Using Flink
+
+This repo uses Apache Flink and Apache Storm connector to have all the Storm Topologies actually run on Apache Flink.
+
+More info of the Flink and Storm connector can be found [here](https://ci.apache.org/projects/flink/flink-docs-master/apis/storm_compatibility.html)
+
+
+##Sample Job Run for testing
+
+
+ASA Topology
+
+Main Class
+com.opensoc.topology.Asa
+
+Program arguments          -local_mode true -config_path "Path of the config path" -generator_spout true
+
+
+Example for reference      -local_mode true -config_path /Users/poj871/GitHubrepos/oss/opensoc-streaming/OpenSOC-Topologies/src/main/resources/OpenSOC_Configs/ -generator_spout true
+
+
+This topology will write the output on the console and write into a file at "/tmp/writingBoltOutput.txt"
+
+
+
+
 #Current Build
 
 The latest build of OpenSOC-Streaming is 0.6BETA.

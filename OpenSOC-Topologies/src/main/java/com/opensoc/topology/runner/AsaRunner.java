@@ -69,7 +69,7 @@ public class AsaRunner extends TopologyRunner implements Serializable{
 
 			builder.setBolt("Printing Bolt", new PrintingBolt()).shuffleGrouping(messageUpstreamComponent);
 
-			builder.setBolt("WritingFile", new BoltFileSink("/Users/poj871/strout/file.txt", new
+			builder.setBolt("WritingFile", new BoltFileSink("/tmp/writingBoltOutput.txt", new
 					OutputFormatter() {
 
 						//@Override
