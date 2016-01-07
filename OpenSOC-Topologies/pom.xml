@@ -95,11 +95,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.storm</groupId>
-			<artifactId>storm-core</artifactId>
-			<version>${global_storm_version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.storm</groupId>
 			<artifactId>storm-kafka</artifactId>
 			<version>${global_storm_version}</version>
 		</dependency>
@@ -168,8 +163,6 @@
 						<configuration>
 							<artifactSet>
 								<excludes>
-									<exclude>storm:storm-core:*</exclude>
-									<exclude>storm:storm-lib:*</exclude>
 									<exclude>*slf4j*</exclude>
 								</excludes>
 							</artifactSet>

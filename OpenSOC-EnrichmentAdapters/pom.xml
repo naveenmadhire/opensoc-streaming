@@ -10,7 +10,7 @@
 	the specific language governing permissions and limitations under the License. -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.opensoc</groupId>
@@ -20,8 +20,8 @@
 	<artifactId>OpenSOC-EnrichmentAdapters</artifactId>
 
 	<properties>
-       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>		
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<mysql.version>5.1.31</mysql.version>
 		<slf4j.version>1.7.7</slf4j.version>
 		<hbase.client.version>0.96.1-hadoop2</hbase.client.version>
@@ -38,7 +38,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
@@ -64,24 +63,23 @@
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-hdfs</artifactId>
 			<version>${global_hadoop_version}</version>
-			  <exclusions>
+			<exclusions>
 				<exclusion>
-				   <artifactId>servlet-api</artifactId>
-				   <groupId>javax.servlet</groupId>
-				  </exclusion>
-		    </exclusions>					
+					<artifactId>servlet-api</artifactId>
+					<groupId>javax.servlet</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.storm</groupId>
 			<artifactId>storm-core</artifactId>
 			<version>${global_storm_version}</version>
-			<scope>provided</scope>
-			  <exclusions>
+			<exclusions>
 				<exclusion>
-				   <artifactId>servlet-api</artifactId>
-				   <groupId>javax.servlet</groupId>
-				  </exclusion>
-		    </exclusions>					
+					<artifactId>servlet-api</artifactId>
+					<groupId>javax.servlet</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -94,10 +92,10 @@
 			<version>${global_hadoop_version}</version>
 			<exclusions>
 				<exclusion>
-				   <artifactId>servlet-api</artifactId>
-				   <groupId>javax.servlet</groupId>
-				  </exclusion>
-		    </exclusions>			
+					<artifactId>servlet-api</artifactId>
+					<groupId>javax.servlet</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

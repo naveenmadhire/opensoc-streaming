@@ -156,7 +156,7 @@ public abstract class TopologyRunner {
 			SettingsLoader.printConfigOptions((PropertiesConfiguration) config,
 					"spout.test");
 		}
-
+		/*
 		if (!command_line.isGenerator_spout()) {
 			String component_name = config.getString("spout.kafka.name",
 					"DefaultTopologyKafkaSpout");
@@ -170,7 +170,7 @@ public abstract class TopologyRunner {
 			SettingsLoader.printConfigOptions((PropertiesConfiguration) config,
 					"spout.kafka");
 		}
-
+		*/
 		if (config.getBoolean("bolt.parser.enabled", true)) {
 			String component_name = config.getString("bolt.parser.name",
 					"DefaultTopologyParserBot");
@@ -267,8 +267,8 @@ public abstract class TopologyRunner {
 					"bolt.enrichment.threat");
 		}
 
-		*/
-		/*
+
+
 		if (config.getBoolean("bolt.alerts.enabled", false)) {
 			String component_name = config.getString("bolt.alerts.name",
 					"DefaultAlertsBolt");
@@ -287,8 +287,8 @@ public abstract class TopologyRunner {
 			SettingsLoader.printConfigOptions((PropertiesConfiguration) config,
 					"bolt.alerts");
 		}
-		*/
-		/*
+
+
 		if (config.getBoolean("bolt.alerts.indexing.enabled") && config.getBoolean("bolt.alerts.enabled")) {
 
 			String component_name = config.getString(
@@ -396,9 +396,10 @@ public abstract class TopologyRunner {
 		if (local_mode) {
 			conf.setNumWorkers(config.getInt("num.workers"));
 			conf.setMaxTaskParallelism(1);
-			FlinkLocalCluster cluster = new FlinkLocalCluster();
+			FlinkLocalCluster cluster = FlinkLocalCluster.getLocalCluster();
 			cluster.submitTopology(topology_name, conf,
 					FlinkTopology.createTopology(builder));
+
 		} else {
 
 			conf.setNumWorkers(config.getInt("num.workers"));

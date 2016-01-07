@@ -21,32 +21,33 @@ import com.opensoc.filters.GenericMessageFilter;
 import com.opensoc.parser.interfaces.MessageParser;
 import com.opensoc.parsing.AbstractParserBolt;
 import com.opensoc.parsing.TelemetryParserBolt;
+import com.opensoc.test.bolts.PrintingBolt;
 import com.opensoc.test.spouts.GenericInternalTestSpout;
 
 public class BroRunner extends TopologyRunner{
-	
-	 static String test_file_path = "SampleInput/BroExampleOutput";
+
+	static String test_file_path = "SampleInput/BroExampleOutput";
 
 	@Override
 	public boolean initializeParsingBolt(String topology_name,
-			String name) {
+										 String name) {
 		try {
 
 			String messageUpstreamComponent = messageComponents.get(messageComponents.size()-1);
-			
+
 			System.out.println("[OpenSOC] ------" +  name + " is initializing from " + messageUpstreamComponent);
-			
+
 			String class_name = config.getString("bolt.parser.adapter");
-			
+
 			if(class_name == null)
 			{
 				System.out.println("[OpenSOC] Parser adapter not set.  Please set bolt.indexing.adapter in topology.conf");
 				throw new Exception("Parser adapter not set");
 			}
-			
+			/*
 			Class loaded_class = Class.forName(class_name);
 			MessageParser parser = (MessageParser) loaded_class.newInstance();
-			
+
 			AbstractParserBolt parser_bolt = new TelemetryParserBolt()
 					.withMessageParser(parser)
 					.withOutputFieldName(topology_name)
@@ -58,6 +59,9 @@ public class BroRunner extends TopologyRunner{
 					.shuffleGrouping(messageUpstreamComponent)
 					.setNumTasks(config.getInt("bolt.parser.num.tasks"));
 
+			*/
+			builder.setBolt("Printing Bolt", new PrintingBolt(), 1).shuffleGrouping(messageUpstreamComponent);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(0);
@@ -66,7 +70,7 @@ public class BroRunner extends TopologyRunner{
 		return true;
 	}
 
-	@Override	
+	@Override
 	public  boolean initializeTestingSpout(String name) {
 		try {
 
