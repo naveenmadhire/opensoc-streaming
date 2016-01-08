@@ -24,6 +24,8 @@ import com.opensoc.parsing.AbstractParserBolt;
 import com.opensoc.parsing.TelemetryParserBolt;
 import com.opensoc.test.bolts.PrintingBolt;
 import com.opensoc.test.spouts.GenericInternalTestSpout;
+import org.apache.flink.hadoop.shaded.org.jboss.netty.util.internal.SystemPropertyUtil;
+import org.apache.flink.storm.util.BoltFileSink;
 import org.apache.flink.storm.util.BoltPrintSink;
 import org.apache.flink.storm.util.OutputFormatter;
 
@@ -49,7 +51,7 @@ public class BroRunner extends TopologyRunner implements Serializable{
 				System.out.println("[OpenSOC] Parser adapter not set.  Please set bolt.indexing.adapter in topology.conf");
 				throw new Exception("Parser adapter not set");
 			}
-			/*
+
 			Class loaded_class = Class.forName(class_name);
 			MessageParser parser = (MessageParser) loaded_class.newInstance();
 
@@ -64,14 +66,21 @@ public class BroRunner extends TopologyRunner implements Serializable{
 					.shuffleGrouping(messageUpstreamComponent)
 					.setNumTasks(config.getInt("bolt.parser.num.tasks"));
 
-			*/
-			builder.setBolt("Printing Bolt", new PrintingBolt(), 1).shuffleGrouping(messageUpstreamComponent);
+
+			//builder.setBolt("Printing Bolt", new PrintingBolt(), 1).shuffleGrouping(name, "message");
 
 			builder.setBolt("PrintBoltUsingFlinkClass", new BoltPrintSink(new OutputFormatter() {
 				public String format(Tuple tuple) {
 					return tuple.toString();
 				}
-			}), 1).shuffleGrouping(messageUpstreamComponent);
+			}), 1).shuffleGrouping(name, "message");
+
+			builder.setBolt("Write to File", new BoltFileSink("/tmp/out.txt", new OutputFormatter() {
+				public String format(Tuple tuple) {
+					return tuple.toString();
+				}
+			}), 1).shuffleGrouping(name, "message");
+
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -94,6 +103,8 @@ public class BroRunner extends TopologyRunner implements Serializable{
 			builder.setSpout(name, testSpout,
 					config.getInt("spout.test.parallelism.hint")).setNumTasks(
 					config.getInt("spout.test.num.tasks"));
+
+			System.out.println("Printing config:" + config.getInt("spout.test.parallelism.hint"));
 
 		} catch (Exception e) {
 			e.printStackTrace();

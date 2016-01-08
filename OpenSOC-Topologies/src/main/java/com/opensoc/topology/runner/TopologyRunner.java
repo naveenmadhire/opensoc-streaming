@@ -24,6 +24,7 @@ import backtype.storm.spout.SchemeAsMultiScheme;
 import backtype.storm.topology.BoltDeclarer;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
+import backtype.storm.utils.Utils;
 import com.esotericsoftware.kryo.serializers.MapSerializer;
 import com.opensoc.alerts.TelemetryAlertsBolt;
 import com.opensoc.alerts.interfaces.AlertsAdapter;
@@ -399,6 +400,7 @@ public abstract class TopologyRunner {
 			FlinkLocalCluster cluster = FlinkLocalCluster.getLocalCluster();
 			cluster.submitTopology(topology_name, conf,
 					FlinkTopology.createTopology(builder));
+			Utils.sleep(10 * 1000);
 
 		} else {
 

@@ -36,7 +36,7 @@ public class PrintingBolt extends BaseRichBolt {
 	}
 
 	public void execute(Tuple input) {
-		System.out.println("---------[RECEIVED] " + input.toString());
+		System.out.println("---------[RECEIVED] " + input.getString(0));
 		
 	}
 
