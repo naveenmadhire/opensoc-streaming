@@ -52,6 +52,7 @@ public class BroRunner extends TopologyRunner implements Serializable{
 				throw new Exception("Parser adapter not set");
 			}
 
+
 			Class loaded_class = Class.forName(class_name);
 			MessageParser parser = (MessageParser) loaded_class.newInstance();
 
@@ -66,8 +67,9 @@ public class BroRunner extends TopologyRunner implements Serializable{
 					.shuffleGrouping(messageUpstreamComponent)
 					.setNumTasks(config.getInt("bolt.parser.num.tasks"));
 
-
-			//builder.setBolt("Printing Bolt", new PrintingBolt(), 1).shuffleGrouping(name, "message");
+			//TODO: Below logic for testing purpose only. Need to be removed when executing the real topology
+			/*
+			builder.setBolt("Printing Bolt", new PrintingBolt(), 1).shuffleGrouping(name, "message");
 
 			builder.setBolt("PrintBoltUsingFlinkClass", new BoltPrintSink(new OutputFormatter() {
 				public String format(Tuple tuple) {
@@ -80,7 +82,7 @@ public class BroRunner extends TopologyRunner implements Serializable{
 					return tuple.toString();
 				}
 			}), 1).shuffleGrouping(name, "message");
-
+			*/
 
 		} catch (Exception e) {
 			e.printStackTrace();

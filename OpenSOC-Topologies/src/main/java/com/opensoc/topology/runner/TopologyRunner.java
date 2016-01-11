@@ -1038,4 +1038,11 @@ public abstract class TopologyRunner {
 		return true;
 	}
 
+	private TopologyBuilder getBuilder() {
+		return builder;
+	}
+
+	private void setBuilder(TopologyBuilder builder) {
+		this.builder = builder;
+	}
 }

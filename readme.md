@@ -1,14 +1,35 @@
-#OpenSoc Streaming Using Flink
+#OpenSoc Streaming Using Apache Flink
 
-This repo uses Apache Flink and Apache Storm connector to have all the Storm Topologies actually run on Apache Flink.
+This repo uses Apache Flink and Apache Storm connector to have all the Storm Topologies actually run on Apache Flink. All the existing Storm topologies can be run with very minimal changes.
 
 More info of the Flink and Storm connector can be found [here](https://ci.apache.org/projects/flink/flink-docs-master/apis/storm_compatibility.html)
+
+Apache Flink can be run on any multi-node hadoop/yarn cluster. More information can be found [here](https://ci.apache.org/projects/flink/flink-docs-master/setup/yarn_setup.html)
+
+# How to run the repo
+
+```
+mvn clean install
+```
+
+This will create a fat jar under /target folder.
+
+
+For running Apache Flink on Yarn,
+
+a. Start a Yarn Session,
+
+```
+./bin/yarn-session.sh -n 10 -tm 8192 -s 32
+```
+
+b. Now submit job to a YARN Session using  "./bin/flink run"
 
 
 
 #Current Build
 
-The latest build of OpenSOC-Streaming is 0.6BETA.
+The latest build of OpenSOC-Streaming is 0.6
 
 We are still in the process of merging/porting additional features from our production code base into this open source release. This release will be followed by a number of additional beta releases until the port is complete. We will also work on getting additional documentation and user/developer guides to the community as soon as we can. At this time we offer no support for the beta software, but will try to respond to requests as promptly as we can.
 

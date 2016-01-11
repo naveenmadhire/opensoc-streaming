@@ -24,7 +24,9 @@ import com.opensoc.parsing.TelemetryParserBolt;
 import com.opensoc.parsing.parsers.BasicLancopeParser;
 import com.opensoc.test.spouts.GenericInternalTestSpout;
 
-public class LancopeRunner extends TopologyRunner{
+import java.io.Serializable;
+
+public class LancopeRunner extends TopologyRunner implements Serializable{
 	
 	 static String test_file_path = "SampleInput/LancopeExampleOutput";
 

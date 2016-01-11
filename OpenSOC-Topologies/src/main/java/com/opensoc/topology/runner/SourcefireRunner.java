@@ -23,7 +23,9 @@ import com.opensoc.parsing.AbstractParserBolt;
 import com.opensoc.parsing.TelemetryParserBolt;
 import com.opensoc.test.spouts.GenericInternalTestSpout;
 
-public class SourcefireRunner extends TopologyRunner{
+import java.io.Serializable;
+
+public class SourcefireRunner extends TopologyRunner implements Serializable{
 	
 	 static String test_file_path = "SampleInput/SourcefireExampleOutput";
 

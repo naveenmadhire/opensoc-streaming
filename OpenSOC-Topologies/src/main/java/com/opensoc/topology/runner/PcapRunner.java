@@ -20,7 +20,9 @@ package com.opensoc.topology.runner;
 import com.opensoc.parsing.PcapParserBolt;
 import com.opensoc.test.spouts.GenericInternalTestSpout;
 
-public class PcapRunner extends TopologyRunner{
+import java.io.Serializable;
+
+public class PcapRunner extends TopologyRunner implements Serializable{
 	
 	 static String test_file_path = "SampleInput/PCAPExampleOutput";
 
