@@ -9,6 +9,9 @@ Apache Flink can be run on any multi-node hadoop/yarn cluster. More information 
 # How to run the repo
 
 ```
+git clone "Github directory"
+cd opensoc-streaming
+
 mvn clean install
 ```
 
@@ -19,11 +22,19 @@ For running Apache Flink on Yarn,
 
 a. Start a Yarn Session,
 
+Eg,
+
 ```
 ./bin/yarn-session.sh -n 10 -tm 8192 -s 32
 ```
 
-b. Now submit job to a YARN Session using  "./bin/flink run"
+This will create an YARN Session with 10 task manager with 8 GB of memory and 32 processing slots each
+
+b. Now submit job to a YARN Session using
+
+```
+./bin/flink run "Location of the fat jar" -c "Fully qualified name of Main program" "Arguments to the Main program"
+```
 
 
 
